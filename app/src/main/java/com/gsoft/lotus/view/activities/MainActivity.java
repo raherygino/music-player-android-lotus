@@ -1,5 +1,6 @@
 package com.gsoft.lotus.view.activities;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -9,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.gsoft.lotus.databinding.ActivityMainBinding;
+import com.gsoft.lotus.services.MusicService;
 import com.gsoft.lotus.viewmodel.MusicViewModel;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,6 +26,10 @@ public class MainActivity extends AppCompatActivity {
 
         musicViewModel = new ViewModelProvider(this).get(MusicViewModel.class);
 
+        if (!MusicService.isServiceRunning(this)) {
+            startService(new Intent(this, MusicService.class));
+        }
+
         binding.btnPlay.setOnClickListener(v -> {
             String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/audio.mp3";
             Uri uri = Uri.parse(filePath);
@@ -33,5 +39,13 @@ public class MainActivity extends AppCompatActivity {
 
         binding.btnStop.setOnClickListener(v -> musicViewModel.stopMusic());
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (!MusicService.isServiceRunning(this)) {
+            stopService(new Intent(this, MusicService.class));
+        }
     }
 }

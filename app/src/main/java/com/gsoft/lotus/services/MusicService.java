@@ -15,8 +15,6 @@ import com.gsoft.lotus.viewmodel.MusicViewModel;
 
 public class MusicService extends Service {
     private MusicViewModel musicViewModel;
-    private Context context;
-
 
     @Override
     public void onCreate() {
